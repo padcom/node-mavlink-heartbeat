@@ -26,11 +26,16 @@ heartbeat.on('heartbeat', ({ packet, heartbeat }: HeartbeatData) => {
   // or with the typed heartbeat packet
   console.log(heartbeat.baseMode)
 })
+
 port
   .pipe(new MavLinkPacketSplitter())
   .pipe(new MavLinkPacketParser())
   .pipe(heartbeat)
   .resume()
+
+// Wait for the drone to give us a sign it's alive
+// That way we know for sure the connection is ready.
+await heartbeat.waitForOne()
 
 // send a single heartbeat
 await heartbeat.send()

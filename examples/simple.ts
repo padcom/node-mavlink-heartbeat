@@ -24,6 +24,10 @@ import { Heartbeat, HeartbeatData } from '..'
     .pipe(heartbeat)
     .resume()
 
+  // Wait for the drone to give us a sign it's alive
+  // That way we know for sure the connection is ready.
+  await heartbeat.waitForOne()
+
   // That's how you send one heartbeat to the other side.
   // If you want to do it periodically call the `start()` method.
   await heartbeat.send()

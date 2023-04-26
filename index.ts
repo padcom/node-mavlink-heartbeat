@@ -1,5 +1,6 @@
 import { Transform, TransformOptions, TransformCallback, Writable } from 'stream'
 import { MavLinkPacket, MavLinkProtocol, MavLinkProtocolV2, send, minimal } from 'node-mavlink'
+import { waitForEvent } from 'node-mavlink-utils'
 
 /**
  * Heartbeat transformer options specific to the implementation
@@ -48,6 +49,13 @@ export class Heartbeat extends Transform {
   }
 
   /**
+   * Wait for one heartbeat
+   */
+  async waitForOne(timeout: number = 1000) {
+    return await waitForEvent(this, 'heartbeat', timeout)
+  }
+
+  /**
    * Send heartbeat packet to the other side
    */
   async send() {
@@ -81,3 +89,4 @@ export class Heartbeat extends Transform {
     }
   }
 }
+
